@@ -1,0 +1,41 @@
+{
+  "123456": {
+    "mc_number": "123456",
+    "dot_number": "3177404",
+    "legal_name": "B MARRON LOGISTICS LLC",
+    "dba_name": null,
+    "allow_to_operate": true,
+    "out_of_service": false,
+    "safety_rating": null,
+    "power_units": 1,
+    "drivers": 1,
+    "eligible": true,
+    "reason": "Carrier is allowed to operate and is not marked out of service."
+  },
+  "100008": {
+    "mc_number": "100008",
+    "dot_number": "3130796",
+    "legal_name": "BC ECOCHIPS LTD",
+    "dba_name": null,
+    "allow_to_operate": false,
+    "out_of_service": true,
+    "safety_rating": null,
+    "power_units": 1,
+    "drivers": 1,
+    "eligible": false,
+    "reason": "Carrier failed eligibility checks. Do not tender the load automatically."
+  },
+  "777888": {
+    "mc_number": "777888",
+    "dot_number": "2777888",
+    "legal_name": "Midwest Reefer Group LLC",
+    "dba_name": "Midwest Reefer",
+    "allow_to_operate": true,
+    "out_of_service": false,
+    "safety_rating": "NONE",
+    "power_units": 16,
+    "drivers": 19,
+    "eligible": true,
+    "reason": "Allowed to operate and not out of service. Safety rating not issued."
+  }
+}

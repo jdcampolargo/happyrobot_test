@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_PATH: /app/data/app.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - carrier_sales_data:/app/data
+
+volumes:
+  carrier_sales_data:

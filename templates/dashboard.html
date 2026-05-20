@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ broker_name }} Metrics Control Tower</title>
+  <link rel="icon" href="/static/happyrobot-favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://cdn.prod.website-files.com" />
+  <link rel="stylesheet" href="/static/dashboard.css" />
+  <script defer src="/static/dashboard.js"></script>
+</head>
+<body data-environment="{{ environment }}" data-broker-name="{{ broker_name }}">
+  <div class="shell">
+    <aside class="side-rail" aria-label="Dashboard sections">
+      <a class="brand-lockup" href="/dashboard">
+        <span class="brand-mark" aria-hidden="true"><img src="/static/happyrobot-favicon.png" alt="" /></span>
+        <span>
+          <strong>HappyRobot</strong>
+          <small>Client dashboard</small>
+        </span>
+      </a>
+      <nav>
+        <a href="#overview" class="active">Overview</a>
+        <a href="#outcomes">Outcomes</a>
+        <a href="#lanes">Lanes</a>
+        <a href="#records">Records</a>
+      </nav>
+      <div class="rail-proof">
+        <span>Source</span>
+        <strong>Custom /api/metrics</strong>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header id="overview" class="hero-panel">
+        <div class="hero-copy">
+          <div>
+            <p class="eyebrow">{{ broker_name }} / carrier sales</p>
+            <h1>Carrier sales control tower</h1>
+            <p class="lede">Logged call outcomes, carrier qualification, pricing discipline, and lane conversion. Source: custom SQLite facts table via <span>/api/metrics</span>.</p>
+          </div>
+          <div class="hero-proof">
+            <span>30s refresh</span>
+            <span>Not platform analytics</span>
+            <span>Broker-owned report</span>
+          </div>
+        </div>
+
+        <figure class="hero-media">
+          <img src="/static/happyrobot-truckimage.png" alt="Truck and trailer from HappyRobot logistics page" />
+          <figcaption>
+            <span>Live report</span>
+            <strong>{{ broker_name }}</strong>
+          </figcaption>
+        </figure>
+      </header>
+
+      <section class="workflow-strip" aria-label="Metrics data flow">
+        <div>
+          <span>01</span>
+          <strong>Voice call</strong>
+          <small>Carrier intent captured</small>
+        </div>
+        <div>
+          <span>02</span>
+          <strong>Tool logic</strong>
+          <small>MC, loads, pricing</small>
+        </div>
+        <div>
+          <span>03</span>
+          <strong>Call log</strong>
+          <small>SQLite facts table</small>
+        </div>
+        <div>
+          <span>04</span>
+          <strong>Custom report</strong>
+          <small>/api/metrics</small>
+        </div>
+      </section>
+
+      <section class="status-bar" aria-label="Dashboard status">
+        <div>
+          <span>Environment</span>
+          <strong id="environment_label">{{ environment }}</strong>
+        </div>
+        <div>
+          <span>Source</span>
+          <strong>SQLite facts table</strong>
+        </div>
+        <div>
+          <span>Last refresh</span>
+          <strong id="last_refresh">Loading</strong>
+        </div>
+        <div>
+          <span>Latest call</span>
+          <strong id="latest_call">Loading</strong>
+        </div>
+      </section>
+
+      <section class="kpi-grid" aria-label="Primary metrics">
+        <article class="kpi-tile feature">
+          <div class="kpi-meta">
+            <span>Total calls</span>
+            <small>Structured runs logged</small>
+          </div>
+          <strong id="total_calls">--</strong>
+        </article>
+        <article class="kpi-tile">
+          <div class="kpi-meta">
+            <span>Transfer rate</span>
+            <small><b id="booked_calls">--</b> mocked transfers</small>
+          </div>
+          <strong id="transfer_rate">--</strong>
+        </article>
+        <article class="kpi-tile">
+          <div class="kpi-meta">
+            <span>Qualified carriers</span>
+            <small>Carrier eligibility pass rate</small>
+          </div>
+          <strong id="qualified_rate">--</strong>
+        </article>
+        <article class="kpi-tile">
+          <div class="kpi-meta">
+            <span>Rate vs board</span>
+            <small>Booked final offer delta</small>
+          </div>
+          <strong id="rate_vs_board">--</strong>
+        </article>
+        <article class="kpi-tile">
+          <div class="kpi-meta">
+            <span>Avg final offer</span>
+            <small>Booked or negotiated calls</small>
+          </div>
+          <strong id="avg_final_offer">--</strong>
+        </article>
+        <article class="kpi-tile">
+          <div class="kpi-meta">
+            <span>Avg rounds</span>
+            <small>Negotiation turns</small>
+          </div>
+          <strong id="avg_rounds">--</strong>
+        </article>
+      </section>
+
+      <section class="insight-row" aria-label="Custom report actions">
+        <article class="decision-panel">
+          <p class="eyebrow">Current readout</p>
+          <h2 id="decision_title">Loading metrics</h2>
+          <p id="decision_body">Waiting for the custom metrics endpoint to return the latest carrier sales snapshot.</p>
+          <div class="button-row">
+            <button id="copy_report" type="button" class="primary-action">Copy report</button>
+            <button id="download_report" type="button" class="secondary-action">Download JSON</button>
+          </div>
+        </article>
+
+        <article class="proof-panel">
+          <p class="eyebrow">Data path</p>
+          <div class="proof-list">
+            <div><span></span><strong>Post-call action writes structured outcomes to /api/calls/log</strong></div>
+            <div><span></span><strong>SQLite stores the broker-specific call facts</strong></div>
+            <div><span></span><strong>Dashboard reads /api/metrics for the report view</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="outcomes" class="analytics-grid" aria-label="Outcome analytics">
+        <article class="module">
+          <div class="module-heading">
+            <div>
+              <p class="eyebrow">Distribution</p>
+              <h2>Call outcomes</h2>
+            </div>
+            <span id="outcome_total" class="module-count">-- calls</span>
+          </div>
+          <div id="outcome_bars" class="bar-stack"></div>
+        </article>
+
+        <article class="module">
+          <div class="module-heading">
+            <div>
+              <p class="eyebrow">Conversation quality</p>
+              <h2>Sentiment mix</h2>
+            </div>
+            <span id="sentiment_total" class="module-count">-- labels</span>
+          </div>
+          <div id="sentiment_bars" class="bar-stack compact"></div>
+        </article>
+      </section>
+
+      <section id="lanes" class="module lane-module" aria-label="Lane performance">
+        <div class="module-heading">
+          <div>
+            <p class="eyebrow">Lane performance</p>
+            <h2>Lane conversion</h2>
+          </div>
+          <span id="lane_count" class="module-count">-- lanes</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Lane</th>
+                <th>Calls</th>
+                <th>Booked</th>
+                <th>Conversion</th>
+                <th>Avg final offer</th>
+              </tr>
+            </thead>
+            <tbody id="lane_rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="records" class="module records-module" aria-label="Recent call records">
+        <div class="module-heading">
+          <div>
+            <p class="eyebrow">Call-level records</p>
+            <h2>Recent structured logs</h2>
+          </div>
+          <span class="module-count">Latest 10</span>
+        </div>
+        <div class="table-wrap wide">
+          <table>
+            <thead>
+              <tr>
+                <th>Created</th>
+                <th>Run</th>
+                <th>Carrier</th>
+                <th>MC</th>
+                <th>Load</th>
+                <th>Outcome</th>
+                <th>Sentiment</th>
+                <th>Offer</th>
+                <th>Rounds</th>
+                <th>Summary</th>
+              </tr>
+            </thead>
+            <tbody id="recent_rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section id="auth_gate" class="auth-gate" hidden>
+    <form id="auth_form" class="auth-card">
+      <p class="eyebrow">Secure report</p>
+      <h2>Enter the dashboard API key</h2>
+      <label for="api_key_input">API key</label>
+      <input id="api_key_input" name="api_key" type="password" autocomplete="off" />
+      <button type="submit" class="primary-action">Open dashboard</button>
+      <p id="auth_error" class="auth-error" role="alert"></p>
+    </form>
+  </section>
+</body>
+</html>
