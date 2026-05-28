@@ -93,7 +93,7 @@ Sentiment = Literal["positive", "neutral", "negative", "mixed"]
 
 
 class CallLogRequest(BaseModel):
-    run_id: str = Field(description="HappyRobot run id, or a locally generated id for testing")
+    run_id: str = Field(description="Workflow run id, or a locally generated id for testing")
     caller_phone: Optional[str] = None
     mc_number: Optional[str] = None
     carrier_name: Optional[str] = None

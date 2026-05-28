@@ -19,7 +19,7 @@ def _extract_bearer(auth_header: Optional[str]) -> Optional[str]:
 
 
 async def require_api_key(request: Request) -> str:
-    """Accept X-API-Key, Authorization: Bearer, or api_key query param for browser demos."""
+    """Accept X-API-Key, Authorization: Bearer, or api_key query param for browser dashboard access."""
     expected = _configured_api_key()
     provided = (
         request.headers.get("X-API-Key")

@@ -100,10 +100,10 @@ function hideAuthGate() {
 function getStoredApiKey() {
   const queryKey = params.get("api_key");
   if (queryKey) {
-    window.localStorage.setItem("happyrobot_dashboard_api_key", queryKey);
+    window.localStorage.setItem("logistics_dashboard_api_key", queryKey);
     return queryKey;
   }
-  return window.localStorage.getItem("happyrobot_dashboard_api_key");
+  return window.localStorage.getItem("logistics_dashboard_api_key");
 }
 
 function renderBars(targetId, counts, labels) {
@@ -231,7 +231,7 @@ function buildReportText(metrics) {
     `Average rate vs loadboard: ${pct(metrics.avg_rate_vs_loadboard_pct)}`,
     `Average negotiation rounds: ${decimal(metrics.avg_negotiation_rounds)}`,
     topLane ? `Top lane by volume: ${topLane.lane} (${topLane.calls} calls, ${pct(topLane.conversion_rate)} conversion)` : "Top lane by volume: none yet",
-    "Source: custom /api/metrics endpoint backed by logged call records, not HappyRobot platform analytics.",
+    "Source: custom /api/metrics endpoint backed by logged call records.",
   ].join("\n");
 }
 
@@ -240,7 +240,7 @@ function downloadReport(metrics) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "happyrobot-carrier-sales-metrics.json";
+  link.download = "carrier-sales-metrics.json";
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -298,7 +298,7 @@ async function loadMetrics() {
   });
 
   if (resp.status === 401) {
-    window.localStorage.removeItem("happyrobot_dashboard_api_key");
+    window.localStorage.removeItem("logistics_dashboard_api_key");
     showAuthGate("That API key was rejected.");
     throw new Error("Unauthorized");
   }
@@ -320,7 +320,7 @@ function bindAuthForm() {
       return;
     }
     state.apiKey = key;
-    window.localStorage.setItem("happyrobot_dashboard_api_key", key);
+    window.localStorage.setItem("logistics_dashboard_api_key", key);
     try {
       await loadMetrics();
     } catch (err) {

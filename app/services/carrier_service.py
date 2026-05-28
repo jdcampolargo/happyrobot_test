@@ -114,7 +114,7 @@ async def verify_carrier(mc_number: str) -> CarrierVerificationResult:
             if payload:
                 return _build_result(mc_number, payload, source="fmcsa", raw=raw)
         except Exception as exc:  # pragma: no cover - network varies by environment
-            # Keep the web-call demo from failing hard when an external dependency is unavailable.
+            # Keep the carrier-sales flow from failing hard when an external dependency is unavailable.
             fallback_payload = _mock_carriers().get(mc_number, {})
             result = _build_result(mc_number, fallback_payload, source="fallback")
             result.reason = f"FMCSA lookup failed; used demo fallback. External error: {type(exc).__name__}. {result.reason}"

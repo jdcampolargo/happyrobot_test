@@ -40,9 +40,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Inbound Carrier Sales API",
+    title="Logistics Load Tracker API",
     version="1.0.0",
-    description="Secured API and custom dashboard for a HappyRobot inbound carrier sales proof of concept.",
+    description="Secured API and custom dashboard for carrier verification, load matching, negotiation, call logging, and logistics metrics.",
     lifespan=lifespan,
 )
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
